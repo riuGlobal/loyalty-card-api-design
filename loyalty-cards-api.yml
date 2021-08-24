@@ -1,0 +1,803 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: loyalty-cards
+servers:
+  - url: 'http://localhost:8000'
+paths:
+  /:
+    description: 'Heartbeat'
+    get:
+      tags: 
+        - heartbeat
+      summary: 'Get heartbeat to check system health'
+      responses:
+        '200':
+          description: 'Successful heartbeat'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Heartbeat'
+
+  /rewards:
+    get:
+      tags:
+        - rewards
+      summary: 'List reward options'
+      responses: 
+        '200': 
+          description: 'Success'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reward'
+
+    post:
+      tags:
+        - rewards
+      summary: 'Create reward option'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reward'
+      responses:
+        '200':
+          description: 'Success'
+          content:
+            application/json:
+              schema:
+                $ref:  "#/components/schemas/Success"
+
+  /rewards/{id}:
+    put:
+      tags:
+        - rewards
+      summary: 'Edit reward option'
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reward'
+      responses:
+        '200':
+          description: 'Success'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+    delete:
+      tags:
+        - rewards
+      summary: 'Delete reward options'
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'Success'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+
+  /card-blueprints:
+    get:
+      tags:
+        - card-blueprints
+      summary: List card blue prints
+      parameters:
+        - name: id
+          in: query
+          description: "Blueprint's id'"
+          required: false
+          schema:
+            type:
+              integer
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CardBluePrint'
+    post:
+      tags:
+        - card-blueprints
+      summary: Create new blueprint
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardBluePrint'
+      responses:
+        '200':
+          description: 'Success'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+
+  /card-blueprints/{id}:
+    # put:
+    #   tags:
+    #     - card-blueprints
+    #   summary: Edit blueprint
+    #   requestBody:
+    #     required: true
+    #     content:
+    #       application/json:
+    #         schema:
+    #           $ref: '#/components/schemas/CardBluePrint'
+    #   parameters:
+    #     - name: id
+    #       in: "path"
+    #       required: true
+    #       schema:
+    #         type: integer
+    #   responses:
+    #     '200': 
+    #       description: success
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: '#/components/schemas/Success'
+
+    delete:
+      tags:
+        - card-blueprints
+      summary: Destroy blueprint
+      parameters:
+        - name: id
+          in: "path"
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+
+  /card-blueprint-to-rewards:
+    get:
+      tags:
+        - card-blueprint-to-rewards
+      summary: List blueprint by reward records
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/CardBluePrintToReward'
+    post:
+      tags:
+        - card-blueprint-to-rewards
+      summary: Create blueprint by reward records
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardBluePrintToReward'
+      responses:
+        '200':
+          description: 'Success'
+          content:
+            application/json:
+              schema:
+                $ref:  "#/components/schemas/Success" 
+
+  /card-blueprint-to-rewards/{id}:
+    # put:
+    #   tags:
+    #     - card-blueprint-to-rewards
+    #   summary: 'Edit blueprint by reward record'
+    #   parameters:
+    #     - name: id
+    #       in: query
+    #       description: "Card Blueprint by Reward id'"
+    #       required: true
+    #       schema:
+    #         type:
+    #           integer
+    #   requestBody:
+    #     required: true
+    #     content:
+    #       application/json:
+    #         schema:
+    #           $ref: '#/components/schemas/CardBluePrintByReward'
+    #   responses:
+    #     '200':
+    #       description: 'Success'
+    #       content:
+    #         application/json:
+    #           schema:
+    #             $ref: "#/components/schemas/Success"
+    delete:
+      tags:
+        - card-blueprint-to-rewards
+      summary: 'Delete blueprint by reward record'
+      parameters:
+        - name: id
+          in: query
+          description: "Card Blueprint by Reward id"
+          required: true
+          schema:
+            type:
+              integer
+      responses:
+        '200':
+          description: 'Success'
+          content:
+            application/json:
+              schema:
+                $ref:  "#/components/schemas/Success"
+        
+  /card-stacks:
+    get:
+      tags:
+        - card-stacks
+      summary: List card stacks
+      parameters:
+        - name: id
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CardStack'
+    post:
+      tags:
+        - card-stacks
+      summary: Create new cards stack from blueprint
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref:  "#/components/schemas/CardStack"
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+               $ref:  "#/components/schemas/Success"
+
+  /card-stacks/{id}:
+    put:
+      tags:
+      - card-stacks
+      summary: Edit card stack
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CardStack'
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+  
+    delete:
+      tags:
+        - card-stacks
+      summary: Destroy card stack
+      responses:
+        '200':
+          description: Success
+          content:
+            application-json:
+              schema:
+                $ref:  "#/components/schemas/Success"
+        
+  /assigned-cards:
+    get:
+      tags:
+        - assigned-cards
+      summary: List assigned-cards
+      parameters:
+        - name: id
+          in: query
+          required: false
+          schema:
+            type:
+              integer
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AssignedCard' 
+
+    post:
+      tags:
+        - assigned-cards
+      summary: Create assigned card by assigning card from a stack to a user
+      requestBody:
+        required: true
+        content:
+          application-json:
+            schema:
+              $ref:  "#/components/schemas/AssignedCard"
+      responses:
+        '200':
+          description: Success
+          content:
+            application-json:
+              schema:
+                $ref:  "#/components/schemas/Success"
+  
+  /assigned-cards/{id}:
+    # put:
+    #   tags:
+    #     - assigned-cards
+    #   summary: Edit assigned card
+    #   requestBody:
+    #     required: true
+    #     content:
+    #       application-json:
+    #         schema:
+    #           $ref:  "#/components/schemas/AssignedCard"
+    #   responses:
+    #     '200':
+    #       description: Success
+    #       content:
+    #         application-json:
+    #           schema:
+    #             $ref:  "#/components/schemas/Success"
+
+    # patch:
+    #   tags:
+    #     - assigned-cards
+    #   summary: Edit assigned card
+    #   parameters:
+    #     - name: id
+    #       in: path
+    #       required: true
+    #       schema:
+    #         type: integer
+    #   requestBody:
+    #     required: true
+    #     content:
+    #       application-json:
+    #         schema:
+    #           $ref:  "#/components/schemas/AssignedCardPatchBody"
+      # responses:
+      #   '200':
+      #     description: Success
+      #     content:
+      #       application-json:
+      #         schema:
+      #           $ref:  "#/components/schemas/Success"
+
+
+    delete: 
+      tags:
+        - assigned-cards
+      summary: Destroy assigned card
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 'success'
+          content:
+            application-json:
+              schema:
+                $ref: '#/components/schemas/Success'
+            
+  /assigned-cards/{assignedCardId}/punches:
+    get:
+      tags:
+        - assigned-card-punches
+      summary: List assigned card's punches
+      parameters:
+        - name: assignedCardId
+          required: true
+          in: path
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CardPunch'
+      
+    post:
+      tags:
+        - assigned-card-punches
+      summary: "Punch assigned card of id: assignedCardId"
+      parameters:
+        - name: assignedCardId
+          required: true
+          in: path
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+
+  /assigned-cards/punches/{punchId}:
+    put:
+      tags:
+        - assigned-card-punches
+      summary: "Edit punch of id: punchId"
+      parameters:
+        - name: punchId
+          required: true
+          in: path
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref:  "#/components/schemas/CardPunch"
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+    delete:
+      tags:
+        - assigned-card-punches
+      summary: 'Remove punch of id: punchId from its corresponding card'
+      parameters:
+        - name: punchId
+          required: true
+          in: path
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Delete punch from card
+          content: 
+            application-json:
+              schema:
+                $ref: '#/components/schemas/Success'
+
+  /assigned-cards/{id}/redeem-marks:
+    get:
+      tags:
+        - assigned-card-redeemed-marks
+      summary: List assigned card redeem marks
+      responses:
+        '200':
+          description: Success
+          content:
+            application-json:
+              schema:
+                type: array
+                items:  
+                  $ref: "#/components/schemas/CardRedeemedMark"
+
+    post:
+      tags:
+        - assigned-card-redeemed-marks
+      summary: Add redeem marks to assigned card
+      requestBody:
+        required: true
+        content:
+          application-json:
+            schema:
+              $ref: "#/components/schemas/CardRedeemedMark"
+      responses:
+        '200':
+          $ref:  "#/components/responses/success"
+  
+  /assigned-cards/{assignedCardId}/redeem-marks/{redeemMarkId}:
+    delete:
+      parameters:
+        - name: assignedCardId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: redeemMarkId
+          in: path
+          required: true
+          schema:
+            type: integer
+      tags:
+        - assigned-card-redeemed-marks
+      summary: Remove redeem mark from assigned card
+      responses:
+        '200':
+          $ref:  "#/components/responses/success"
+
+components:
+  responses:
+    'success':
+      description: Success
+      content:
+        application-json:
+          schema:
+            $ref: "#/components/schemas/Success"
+  
+    
+  # requestBodies:
+  #   PatchAssignedCard:
+  #     content:
+  #       application-json:
+  #         schema:
+
+  schemas:
+    Heartbeat:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date-time
+        message: 
+          type: string
+          example: 'beating'
+    Reward:
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          example: 1
+          uniqueItems: true
+        amount:
+          type: integer
+          default: 1
+        name: 
+          type: string
+          example: 'Some cool gift'
+        url:
+          type: string
+          example: 'http://my-ecommerce/products/some-cool-gift'
+    CardBluePrint:
+      type: object
+      required:
+        - numPunchBoxes
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          uniqueItems: true
+          example: 1
+        title:
+          type: string
+          default: 'Loyalty card'
+        numberOfPunchBoxes:
+          type: integer
+          format: int32
+          example: 10
+        rewards:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/Reward'
+
+    CardBluePrintToReward:
+      type: object
+      required:
+        - cardBlueprintId
+        - rewardId
+      properties:
+        id:
+          type: integer
+          uniqueItems: true
+          example: 1
+          readOnly: true
+        cardBlueprintId:
+          type: integer
+          uniqueItems: true
+          example: 1
+        rewardId:
+          type: integer
+          uniqueItems: true
+          example: 1
+    CardStack:
+      type: object
+      required:
+        - cardBluePrintId
+        - numberOfCards
+      properties:
+        id:
+          type: string
+          uniqueItems: true
+          readOnly: true
+          example: 1
+        cardBluePrintId:
+          type: integer
+          readOnly: true
+          uniqueItems: true
+          example: 1
+        numberOfCards:
+          type: integer
+          example: 200
+        title:
+          type: string
+          uniqueItems: true
+          description: Title to identify stack
+          example: 'New years 2021 loyalty cards'
+    
+    # AssignedCard:
+    # AssignedCardPatchBody:
+      
+    #   allOf:
+    #     - not:
+    #         required: [userId]
+    #         properties:
+    #           userId:
+    #             type: string
+        # - type: object
+        #   required:
+        #     - cardStackId
+        #     - userId
+        #   properties:
+        #     cardStackId:
+        #       type: number
+        #       example: 1
+        #     userId:
+        #       type: string
+        # - $ref: "#/components/schemas/AssignedCard"     
+    AssignedCard:
+    # AssignedCardPatchBody:
+      type: object
+      required:
+        - cardStackId
+        - userId
+      properties:
+        cardStackId:
+          type: number
+          example: 1
+        userId:
+          type: string
+        # redeemed:
+        #   type: boolean
+        #   default: false
+        rewards:
+          type: array
+          readOnly: true
+          items:
+            $ref:  "#/components/schemas/Reward"
+        punches: 
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/CardPunch'
+        redeemedMarks:
+          type: array
+          readOnly: true
+          items:
+            $ref:  "#/components/schemas/CardRedeemedMark"
+        
+    CardPunch:
+      type: object
+      properties:
+        id:
+          type: integer
+          uniqueItems: true
+          readOnly: true
+          example: 1
+        date:
+          type: string
+          format: date-time
+        
+        assignedCardId:
+          type: integer
+          readOnly: true
+          example: 1
+    
+    CardRedeemedMark:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          example: 1
+          uniqueItems: true
+      
+        date:
+          type: string
+          format: date-time
+
+        assignedCardId:
+          type: integer
+          uniqueItems: true
+          example: 1
+
+        note:
+          type: string
+          example: "All rewards redeemed."
+    Error:
+      type: object
+      required:
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+          example: Error
+    Success:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Success
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+
+tags:
+  - name: heartbeat
+    description: System health
+  - name: rewards
+    description: "Reward: A reward option for completing a loyalty card"
+  - name: card-blueprints
+    description: "Card blueprint: used to create card stacks."
+  - name: card-blueprint-to-rewards
+    description: "Blueprint-reward associative records"
+  - name: card-stacks
+    description: "Card stack:  created from blueprint. A card from the stack may be assigned to a user."
+  - name: assigned-cards
+    description: "Assgined Card: A card from a stack assigned to a user."
+  - name: assigned-card-punches
+    description: "A punch from a punch card (assigned card)"
+  - name: assigned-card-redeemed-marks
+    description: "Redeem Mark: Card mark to indicate reward has been redeemed."
